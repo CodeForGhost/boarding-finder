@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
+/*
+  Palette taken from the Puttalam salterns: the chalk-white crust of the salt
+  pans, the shallow green water standing in them, and the red laterite the
+  roads are cut through.
+*/
+@theme {
+  --color-salt: #f6f7f3;
+  --color-surface: #ffffff;
+  --color-crust: #e3e8de;
+  --color-crust-strong: #cdd5c7;
+
+  --color-ink: #0d1f1b;
+  --color-ink-soft: #4a615c;
+  --color-ink-faint: #7d918c;
+
+  --color-lagoon: #0b6e62;
+  --color-lagoon-deep: #07463e;
+  --color-lagoon-wash: #e6f0ec;
+
+  --color-laterite: #b24a2e;
+  --color-laterite-wash: #f8ece7;
+
+  --color-sun: #d8952a;
+  --color-sun-wash: #fbf1de;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-card: 14px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-salt);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-lagoon);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-lagoon);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+@layer components {
+  /* Small mono label used for areas, prices and counts. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .field {
+    width: 100%;
+    border: 1px solid var(--color-crust-strong);
+    background: var(--color-surface);
+    border-radius: 10px;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .field::placeholder {
+    color: var(--color-ink-faint);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-lagoon);
+    box-shadow: 0 0 0 3px var(--color-lagoon-wash);
+  }
+  select.field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%234a615c' d='M1 1.8 6 6.6l5-4.8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 11px;
+    padding-right: 2rem;
+  }
+}
+
+/* The salt-pan rise: hero content settles in once on load. */
+@keyframes pan-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: pan-rise 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
