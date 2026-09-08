@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { cx } from "./ui";
+import { cn } from "@/lib/utils";
 
 export function Gallery({ images, alt }: { images: string[]; alt: string }) {
   const [active, setActive] = useState(0);
@@ -33,8 +33,8 @@ export function Gallery({ images, alt }: { images: string[]; alt: string }) {
               onClick={() => setActive(i)}
               aria-label={`Photo ${i + 1} of ${images.length}`}
               aria-current={i === active}
-              className={cx(
-                "relative h-16 w-24 overflow-hidden rounded-[10px] border transition-colors",
+              className={cn(
+                "relative h-16 w-24 overflow-hidden rounded-lg border transition-colors",
                 i === active
                   ? "border-lagoon ring-2 ring-lagoon/25"
                   : "border-crust hover:border-crust-strong",

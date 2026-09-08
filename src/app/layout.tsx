@@ -1,15 +1,10 @@
-import type { Metadata } from "next";
-import { Bricolage_Grotesque, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Mono, Manrope } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const instrument = Instrument_Sans({
-  variable: "--font-instrument",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   display: "swap",
 });
@@ -23,22 +18,28 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Puttalam Boarding — rooms for students",
-    template: "%s · Puttalam Boarding",
+    default: "BoardingPx - rooms for students in Puttalam",
+    template: "%s · BoardingPx",
   },
   description:
     "Boarding rooms in Puttalam, Kalladi, Palaviya and Thillayadi. See the price and how many rooms are left before you travel.",
+  applicationName: "BoardingPx",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0d1f1b",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${bricolage.variable} ${instrument.variable} ${plexMono.variable} antialiased`}
-      >
+    <html lang="en" className={`${manrope.variable} ${plexMono.variable}`}>
+      <body>
         {children}
+        <Toaster position="top-center" />
       </body>
     </html>
   );

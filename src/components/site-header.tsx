@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { signOut } from "@/actions/auth";
+import { ButtonLink } from "@/components/button-link";
+import { Button } from "@/components/ui/button";
 import { getUser } from "@/lib/session";
-import { Logo } from "./logo";
-import { ButtonLink } from "./ui";
+import { Logo, Wordmark } from "./logo";
 
 /** "M. Nizam" is initial-plus-name, so the first word is not always the name. */
 function firstName(full: string): string {
@@ -43,12 +44,9 @@ export async function SiteHeader() {
                 </span>
               </ButtonLink>
               <form action={signOut}>
-                <button
-                  type="submit"
-                  className="rounded-[10px] px-3 py-2 text-[0.8125rem] text-ink-soft transition-colors hover:bg-lagoon-wash hover:text-lagoon-deep"
-                >
+                <Button type="submit" variant="ghost" size="sm">
                   Sign out
-                </button>
+                </Button>
               </form>
             </>
           ) : (
@@ -71,8 +69,9 @@ export function SiteFooter() {
   return (
     <footer className="mt-20 border-t border-crust bg-surface">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          Puttalam Boarding — built for students in the North Western Province.
+        <p className="flex flex-wrap items-center gap-1.5">
+          <Wordmark className="text-[0.9375rem]" />
+          <span>built for students in the North Western Province.</span>
         </p>
         <p className="eyebrow">Demo build · FocalDive</p>
       </div>

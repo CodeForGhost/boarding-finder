@@ -2,7 +2,12 @@
 
 import { useActionState, useState } from "react";
 import { signIn } from "@/actions/auth";
-import { Button, cx } from "./ui";
+import { FormError } from "@/components/form-message";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 const DEMO = [
   { role: "Student", email: "student@demo.lk", note: "Ashan, looking in Puttalam Town" },
@@ -22,49 +27,53 @@ export function LoginForm({ next }: { next?: string }) {
       <form action={action} className="space-y-4">
         {next ? <input type="hidden" name="next" value={next} /> : null}
 
-        <label className="block">
-          <span className="eyebrow mb-1.5 block">Email</span>
-          <input
+        <div className="space-y-1.5">
+          <Label htmlFor="email" className="eyebrow">
+            Email
+          </Label>
+          <Input
+            id="email"
             type="email"
             name="email"
             autoComplete="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="field"
+            className="bg-surface"
             placeholder="you@example.com"
           />
-        </label>
+        </div>
 
-        <label className="block">
-          <span className="eyebrow mb-1.5 block">Password</span>
-          <input
+        <div className="space-y-1.5">
+          <Label htmlFor="password" className="eyebrow">
+            Password
+          </Label>
+          <Input
+            id="password"
             type="password"
             name="password"
             autoComplete="current-password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="field"
+            className="bg-surface"
             placeholder="Your password"
           />
-        </label>
+        </div>
 
-        {state?.error ? (
-          <p className="rounded-[8px] border border-laterite/25 bg-laterite-wash px-3 py-2 text-sm text-laterite">
-            {state.error}
-          </p>
-        ) : null}
+        <FormError>{state?.error}</FormError>
 
         <Button type="submit" size="lg" className="w-full" disabled={pending}>
-          {pending ? "Signing in…" : "Sign in"}
+          {pending ? "Signing in..." : "Sign in"}
         </Button>
       </form>
 
-      {/* Demo accounts — one tap fills the form so nobody types on stage. */}
-      <div className="rounded-card border border-dashed border-crust-strong bg-surface p-4">
-        <p className="eyebrow mb-3">Demo accounts</p>
-        <div className="space-y-1.5">
+      {/* Demo accounts: one tap fills the form so nobody types on stage. */}
+      <Card className="gap-3 border-dashed border-crust-strong py-4">
+        <div className="px-4">
+          <p className="eyebrow">Demo accounts</p>
+        </div>
+        <div className="space-y-1.5 px-2">
           {DEMO.map((d) => (
             <button
               key={d.email}
@@ -73,8 +82,8 @@ export function LoginForm({ next }: { next?: string }) {
                 setEmail(d.email);
                 setPassword(DEMO_PASSWORD);
               }}
-              className={cx(
-                "flex w-full items-center justify-between gap-3 rounded-[10px] px-3 py-2 text-left transition-colors",
+              className={cn(
+                "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition-colors",
                 email === d.email ? "bg-lagoon-wash" : "hover:bg-salt",
               )}
             >
@@ -88,7 +97,7 @@ export function LoginForm({ next }: { next?: string }) {
             </button>
           ))}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

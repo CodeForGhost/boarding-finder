@@ -1,4 +1,4 @@
--- Puttalam Boarding Finder — Supabase schema
+-- BoardingPx - Supabase schema
 -- Run this in the Supabase SQL editor once, before seed.sql.
 -- Safe to re-run: every object is created with "if not exists" or replaced.
 
@@ -53,7 +53,7 @@ create table if not exists public.boardings (
   description     text not null default '',
   area            text not null,
   address         text not null default '',
-  gender          text not null check (gender in ('male', 'female', 'mixed')),
+  gender          text not null check (gender in ('male', 'female')),
   price_per_month integer not null check (price_per_month >= 0),
   total_rooms     integer not null default 1 check (total_rooms >= 1),
   available_rooms integer not null default 1 check (available_rooms >= 0),
@@ -63,6 +63,20 @@ create table if not exists public.boardings (
   created_at      timestamptz not null default now(),
   constraint available_within_total check (available_rooms <= total_rooms)
 );
+
+-- Boardings in Puttalam take men or women, never both. A database created
+-- before that was settled still allows 'mixed' and may hold rows using it, and
+-- "create table if not exists" above will not touch either, so the narrowed
+-- constraint is applied here instead.
+--
+-- The constraint cannot be added while 'mixed' rows exist, so they are moved to
+-- 'female': under-inclusive is the safe direction, because a woman filtering
+-- for women-only never lands on a house that turns out to take men. Owners of
+-- those listings should be asked to confirm which it is.
+update public.boardings set gender = 'female' where gender = 'mixed';
+alter table public.boardings drop constraint if exists boardings_gender_check;
+alter table public.boardings
+  add constraint boardings_gender_check check (gender in ('male', 'female'));
 
 create index if not exists boardings_status_idx on public.boardings (status);
 create index if not exists boardings_vendor_idx on public.boardings (vendor_id);

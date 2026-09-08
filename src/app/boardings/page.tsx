@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BoardingCard } from "@/components/boarding-card";
+import { ButtonLink } from "@/components/button-link";
+import { EmptyState } from "@/components/empty-state";
 import { Filters } from "@/components/filters";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
-import { ButtonLink, EmptyState } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
 import { searchBoardings } from "@/lib/data";
 import { plural, rupees } from "@/lib/format";
+import { searchValue } from "@/lib/types";
 import type { Gender } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Boardings" };
 
 type Search = Record<string, string | string[] | undefined>;
-
-function one(v: string | string[] | undefined): string | undefined {
-  const s = Array.isArray(v) ? v[0] : v;
-  return s && s.trim() ? s.trim() : undefined;
-}
 
 function num(v: string | undefined): number | undefined {
   if (!v) return undefined;
@@ -35,12 +33,15 @@ export default async function BoardingsPage({
   searchParams: Promise<Search>;
 }) {
   const sp = await searchParams;
-  const area = one(sp.area);
-  const max = one(sp.max);
-  const min = one(sp.min);
-  const gender = one(sp.gender) as Gender | undefined;
-  const q = one(sp.q);
-  const sort = (one(sp.sort) ?? "recent") as "recent" | "price_asc" | "price_desc";
+  const area = searchValue(sp.area);
+  const max = searchValue(sp.max);
+  const min = searchValue(sp.min);
+  const gender = searchValue(sp.gender) as Gender | undefined;
+  const q = searchValue(sp.q);
+  const sort = (searchValue(sp.sort) ?? "recent") as
+    | "recent"
+    | "price_asc"
+    | "price_desc";
 
   const results = await searchBoardings({
     area,
@@ -54,7 +55,7 @@ export default async function BoardingsPage({
   const active = { area, max, min, gender, q, sort };
   const chips = [
     area && { key: "area", label: area },
-    gender && { key: "gender", label: gender === "mixed" ? "Mixed" : gender === "male" ? "Men only" : "Women only" },
+    gender && { key: "gender", label: gender === "male" ? "Men only" : "Women only" },
     min && { key: "min", label: `From ${rupees(Number(min))}` },
     max && { key: "max", label: `Up to ${rupees(Number(max))}` },
     q && { key: "q", label: `“${q}”` },
@@ -77,7 +78,7 @@ export default async function BoardingsPage({
       <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-10">
         <div className="mb-8">
           <p className="eyebrow mb-2">Boardings</p>
-          <h1 className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          <h1 className="font-display text-3xl font-extrabold tracking-tighter text-ink sm:text-4xl">
             {area ? `Rooms in ${area}` : "Rooms across Puttalam"}
           </h1>
           <p className="mt-2 text-sm text-ink-soft">
@@ -88,12 +89,13 @@ export default async function BoardingsPage({
           {chips.length ? (
             <div className="mt-4 flex flex-wrap items-center gap-2">
               {chips.map((c) => (
-                <span
+                <Badge
                   key={c.key}
-                  className="inline-flex items-center rounded-full border border-lagoon/25 bg-lagoon-wash px-3 py-1 text-[0.8125rem] text-lagoon-deep"
+                  variant="outline"
+                  className="border-lagoon/25 bg-lagoon-wash px-3 py-1 text-[0.8125rem] font-normal text-lagoon-deep"
                 >
                   {c.label}
-                </span>
+                </Badge>
               ))}
               <Link
                 href="/boardings"

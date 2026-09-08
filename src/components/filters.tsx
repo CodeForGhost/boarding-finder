@@ -1,6 +1,12 @@
 import Link from "next/link";
-import { AREAS, GENDERS } from "@/lib/types";
-import { Button } from "./ui";
+import { FilterSelect } from "@/components/filter-select";
+import { SearchForm } from "@/components/search-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Separator } from "@/components/ui/separator";
+import { ANY, AREAS, GENDERS } from "@/lib/types";
 
 export type ActiveFilters = {
   area?: string;
@@ -13,51 +19,53 @@ export type ActiveFilters = {
 
 const BUDGETS = [4000, 5000, 6000, 7000, 8000, 9000];
 
-/** Filters post back as a GET form so every result set has its own URL. */
 export function Filters({ active }: { active: ActiveFilters }) {
   const isFiltered = Boolean(
     active.area || active.max || active.min || active.gender || active.q,
   );
 
   return (
-    <form action="/boardings" method="get" className="space-y-6">
-      {active.sort ? <input type="hidden" name="sort" value={active.sort} /> : null}
+    <SearchForm className="space-y-6">
+      {/* Carried through so applying a filter does not silently reset the sort.
+          "recent" is the default and stays out of the URL. */}
+      {active.sort && active.sort !== "recent" ? (
+        <input type="hidden" name="sort" value={active.sort} />
+      ) : null}
 
-      <div>
-        <label className="eyebrow mb-2 block" htmlFor="f-q">
+      <div className="space-y-2">
+        <Label htmlFor="f-q" className="eyebrow">
           Search
-        </label>
-        <input
+        </Label>
+        <Input
           id="f-q"
           name="q"
           type="search"
           defaultValue={active.q ?? ""}
           placeholder="Street, landmark, wording"
-          className="field"
+          className="bg-surface"
         />
       </div>
 
-      <div>
-        <label className="eyebrow mb-2 block" htmlFor="f-area">
+      <div className="space-y-2">
+        <Label htmlFor="f-area" className="eyebrow">
           Area
-        </label>
-        <select id="f-area" name="area" className="field" defaultValue={active.area ?? ""}>
-          <option value="">Anywhere in Puttalam</option>
-          {AREAS.map((a) => (
-            <option key={a} value={a}>
-              {a}
-            </option>
-          ))}
-        </select>
+        </Label>
+        <FilterSelect
+          id="f-area"
+          name="area"
+          anyLabel="Anywhere in Puttalam"
+          options={AREAS.map((a) => ({ value: a, label: a }))}
+          defaultValue={active.area}
+        />
       </div>
 
-      <div>
-        <span className="eyebrow mb-2 block">Monthly rent</span>
+      <div className="space-y-2">
+        <span className="eyebrow block">Monthly rent</span>
         <div className="grid grid-cols-2 gap-2">
-          <label className="sr-only" htmlFor="f-min">
+          <Label htmlFor="f-min" className="sr-only">
             Lowest rent
-          </label>
-          <input
+          </Label>
+          <Input
             id="f-min"
             name="min"
             type="number"
@@ -66,49 +74,45 @@ export function Filters({ active }: { active: ActiveFilters }) {
             inputMode="numeric"
             defaultValue={active.min ?? ""}
             placeholder="From"
-            className="field font-mono text-[0.8125rem]"
+            className="bg-surface font-mono text-[0.8125rem]"
           />
-          <label className="sr-only" htmlFor="f-max">
+          <Label htmlFor="f-max" className="sr-only">
             Highest rent
-          </label>
-          <select
+          </Label>
+          <FilterSelect
             id="f-max"
             name="max"
-            className="field font-mono text-[0.8125rem]"
-            defaultValue={active.max ?? ""}
-          >
-            <option value="">Any rent</option>
-            {BUDGETS.map((b) => (
-              <option key={b} value={b}>
-                &le; {b.toLocaleString("en-LK")}
-              </option>
-            ))}
-          </select>
+            anyLabel="Any rent"
+            options={BUDGETS.map((b) => ({
+              value: String(b),
+              label: `Up to ${b.toLocaleString("en-LK")}`,
+            }))}
+            defaultValue={active.max}
+            className="font-mono text-[0.8125rem]"
+          />
         </div>
       </div>
 
-      <fieldset>
+      <fieldset className="space-y-2">
         <legend className="eyebrow mb-2">Boarding for</legend>
-        <div className="space-y-1.5">
-          {[{ value: "", label: "Anyone" }, ...GENDERS].map((g) => (
-            <label
-              key={g.value || "any"}
-              className="flex cursor-pointer items-center gap-2.5 text-sm text-ink-soft"
-            >
-              <input
-                type="radio"
-                name="gender"
-                value={g.value}
-                defaultChecked={(active.gender ?? "") === g.value}
-                className="h-4 w-4 accent-lagoon"
-              />
-              {g.label}
-            </label>
+        <RadioGroup name="gender" defaultValue={active.gender || ANY} className="gap-1.5">
+          {[{ value: ANY, label: "Anyone" }, ...GENDERS].map((g) => (
+            <div key={g.value} className="flex items-center gap-2.5">
+              <RadioGroupItem id={`f-gender-${g.value}`} value={g.value} />
+              <Label
+                htmlFor={`f-gender-${g.value}`}
+                className="cursor-pointer font-normal text-ink-soft"
+              >
+                {g.label}
+              </Label>
+            </div>
           ))}
-        </div>
+        </RadioGroup>
       </fieldset>
 
-      <div className="flex items-center gap-3 border-t border-crust pt-5">
+      <Separator />
+
+      <div className="flex items-center gap-3">
         <Button type="submit" size="sm">
           Apply filters
         </Button>
@@ -121,6 +125,6 @@ export function Filters({ active }: { active: ActiveFilters }) {
           </Link>
         ) : null}
       </div>
-    </form>
+    </SearchForm>
   );
 }

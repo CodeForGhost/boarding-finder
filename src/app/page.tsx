@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { BoardingCard } from "@/components/boarding-card";
+import { ButtonLink } from "@/components/button-link";
 import { HeroSearch } from "@/components/hero-search";
+import { SectionHeading } from "@/components/section-heading";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
-import { ButtonLink, SectionHeading } from "@/components/ui";
 import {
   getAreaBreakdown,
   getAreaCounts,
@@ -24,16 +25,16 @@ export default async function HomePage() {
       <SiteHeader />
 
       <main className="flex-1">
-        {/* Hero — the search is the product, so it gets the weight. */}
+        {/* The search is the product, so it gets the weight. */}
         <section className="border-b border-crust bg-gradient-to-b from-lagoon-wash/70 to-salt">
-          <div className="mx-auto max-w-6xl px-5 pb-14 pt-14 sm:pt-20">
+          <div className="mx-auto max-w-6xl px-5 pt-14 pb-14 sm:pt-20">
             <div className="grid items-start gap-10 lg:grid-cols-[1fr_300px]">
               <div>
                 <p className="rise eyebrow mb-4">
                   Puttalam · Kalladi · Palaviya · Thillayadi
                 </p>
                 <h1
-                  className="rise font-display text-[2.5rem] font-bold leading-[1.05] tracking-tight text-ink sm:text-[3.5rem]"
+                  className="rise font-display text-[2.5rem] leading-[1.05] font-extrabold tracking-tighter text-ink sm:text-[3.5rem]"
                   style={{ animationDelay: "60ms" }}
                 >
                   Find the room before you get on the bus.
@@ -131,11 +132,11 @@ export default async function HomePage() {
               { k: "Typical rent", v: rupees(stats.median_price) },
               {
                 k: "Rent range",
-                v: `${(stats.min_price / 1000).toFixed(1)}k – ${(stats.max_price / 1000).toFixed(1)}k`,
+                v: `${(stats.min_price / 1000).toFixed(1)}k to ${(stats.max_price / 1000).toFixed(1)}k`,
               },
             ].map((s) => (
               <div key={s.k} className="px-1 py-6 sm:px-6">
-                <p className="font-mono text-2xl font-medium tracking-tight text-lagoon-deep">
+                <p className="font-mono text-2xl font-medium tracking-tighter text-lagoon-deep">
                   {s.v}
                 </p>
                 <p className="eyebrow mt-1">{s.k}</p>
@@ -167,7 +168,7 @@ export default async function HomePage() {
             <div className="grid gap-8 p-8 sm:p-12 lg:grid-cols-[1.3fr_1fr] lg:items-center">
               <div>
                 <p className="eyebrow mb-3 text-sun">For boarding owners</p>
-                <h2 className="font-display text-3xl font-semibold leading-tight tracking-tight text-salt sm:text-[2.25rem]">
+                <h2 className="font-display text-3xl leading-tight font-extrabold tracking-tighter text-salt sm:text-[2.25rem]">
                   Stop repeating yourself on the phone.
                 </h2>
                 <p className="mt-4 max-w-lg text-[0.9375rem] leading-relaxed text-crust-strong">
@@ -177,7 +178,11 @@ export default async function HomePage() {
                   itself.
                 </p>
                 <div className="mt-7 flex flex-wrap gap-3">
-                  <ButtonLink href="/register?role=vendor" size="lg" className="bg-sun text-ink hover:bg-white">
+                  <ButtonLink
+                    href="/register?role=vendor"
+                    size="lg"
+                    className="bg-sun text-ink hover:bg-white"
+                  >
                     List your boarding
                   </ButtonLink>
                   <ButtonLink

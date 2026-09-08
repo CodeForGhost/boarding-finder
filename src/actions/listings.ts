@@ -14,7 +14,7 @@ import { AMENITIES, AREAS, type Gender } from "@/lib/types";
 
 export type ListingState = { error?: string } | null;
 
-const GENDERS: Gender[] = ["male", "female", "mixed"];
+const GENDERS: Gender[] = ["male", "female"];
 
 function parse(formData: FormData): { input: BoardingInput } | { error: string } {
   const title = String(formData.get("title") ?? "").trim();

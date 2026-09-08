@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ListingForm } from "@/components/listing-form";
-import { SectionHeading } from "@/components/ui";
+import { SectionHeading } from "@/components/section-heading";
 import { requireRole } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Add a boarding" };

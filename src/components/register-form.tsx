@@ -2,7 +2,12 @@
 
 import { useActionState, useState } from "react";
 import { signUp } from "@/actions/auth";
-import { Button, cx } from "./ui";
+import { FormError } from "@/components/form-message";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { cn } from "@/lib/utils";
 
 const ROLE_CHOICES = [
   {
@@ -27,71 +32,99 @@ export function RegisterForm({ initialRole }: { initialRole?: string }) {
     <form action={action} className="space-y-5">
       <fieldset>
         <legend className="eyebrow mb-2">I am here to</legend>
-        <div className="grid gap-2 sm:grid-cols-2">
+        <RadioGroup
+          name="role"
+          value={role}
+          onValueChange={setRole}
+          className="grid gap-2 sm:grid-cols-2"
+        >
           {ROLE_CHOICES.map((c) => (
-            <label
+            <Label
               key={c.value}
-              className={cx(
-                "cursor-pointer rounded-card border p-3.5 transition-colors",
+              htmlFor={`role-${c.value}`}
+              className={cn(
+                "cursor-pointer items-start gap-3 rounded-card border p-3.5 font-normal transition-colors",
                 role === c.value
                   ? "border-lagoon bg-lagoon-wash"
                   : "border-crust-strong bg-surface hover:border-ink-faint",
               )}
             >
-              <input
-                type="radio"
-                name="role"
-                value={c.value}
-                checked={role === c.value}
-                onChange={() => setRole(c.value)}
-                className="sr-only"
-              />
-              <span className="block text-sm font-medium text-ink">{c.label}</span>
-              <span className="mt-0.5 block text-xs leading-relaxed text-ink-soft">
-                {c.note}
+              <RadioGroupItem id={`role-${c.value}`} value={c.value} className="mt-0.5" />
+              <span>
+                <span className="block text-sm font-medium text-ink">{c.label}</span>
+                <span className="mt-0.5 block text-xs leading-relaxed text-ink-soft">
+                  {c.note}
+                </span>
               </span>
-            </label>
+            </Label>
           ))}
-        </div>
+        </RadioGroup>
       </fieldset>
 
-      <label className="block">
-        <span className="eyebrow mb-1.5 block">Full name</span>
-        <input name="full_name" required autoComplete="name" className="field" placeholder="Ashan Fernando" />
-      </label>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block">
-          <span className="eyebrow mb-1.5 block">Email</span>
-          <input type="email" name="email" required autoComplete="email" className="field" placeholder="you@example.com" />
-        </label>
-        <label className="block">
-          <span className="eyebrow mb-1.5 block">Phone</span>
-          <input name="phone" required autoComplete="tel" className="field" placeholder="07X XXX XXXX" />
-        </label>
+      <div className="space-y-1.5">
+        <Label htmlFor="full_name" className="eyebrow">
+          Full name
+        </Label>
+        <Input
+          id="full_name"
+          name="full_name"
+          required
+          autoComplete="name"
+          className="bg-surface"
+          placeholder="Ashan Fernando"
+        />
       </div>
 
-      <label className="block">
-        <span className="eyebrow mb-1.5 block">Password</span>
-        <input
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <Label htmlFor="reg-email" className="eyebrow">
+            Email
+          </Label>
+          <Input
+            id="reg-email"
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            className="bg-surface"
+            placeholder="you@example.com"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="phone" className="eyebrow">
+            Phone
+          </Label>
+          <Input
+            id="phone"
+            name="phone"
+            required
+            autoComplete="tel"
+            className="bg-surface"
+            placeholder="07X XXX XXXX"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="reg-password" className="eyebrow">
+          Password
+        </Label>
+        <Input
+          id="reg-password"
           type="password"
           name="password"
           required
           minLength={8}
           autoComplete="new-password"
-          className="field"
+          className="bg-surface"
           placeholder="At least 8 characters"
         />
-      </label>
+      </div>
 
-      {state?.error ? (
-        <p className="rounded-[8px] border border-laterite/25 bg-laterite-wash px-3 py-2 text-sm text-laterite">
-          {state.error}
-        </p>
-      ) : null}
+      <FormError>{state?.error}</FormError>
 
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
-        {pending ? "Creating account…" : "Create account"}
+        {pending ? "Creating account..." : "Create account"}
       </Button>
     </form>
   );

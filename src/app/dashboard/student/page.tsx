@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { withdrawRequest } from "@/actions/bookings";
-import {
-  BookingStatusBadge,
-  ButtonLink,
-  Card,
-  EmptyState,
-  SectionHeading,
-} from "@/components/ui";
+import { ButtonLink } from "@/components/button-link";
+import { EmptyState } from "@/components/empty-state";
+import { SectionHeading } from "@/components/section-heading";
+import { BookingStatusBadge } from "@/components/status-badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { getStudentBookings } from "@/lib/data";
 import { months, rupees, shortDate, timeAgo } from "@/lib/format";
 import { requireRole } from "@/lib/session";
@@ -46,11 +45,13 @@ export default async function StudentDashboard() {
               { label: "Confirmed", value: confirmed },
               { label: "Requests sent", value: bookings.length },
             ].map((s) => (
-              <Card key={s.label} className="flex-1 px-4 py-3">
-                <p className="font-mono text-xl font-medium text-lagoon-deep">
-                  {s.value}
-                </p>
-                <p className="eyebrow mt-0.5">{s.label}</p>
+              <Card key={s.label} className="flex-1 gap-0 py-3">
+                <CardContent className="px-4">
+                  <p className="font-mono text-xl font-medium text-lagoon-deep">
+                    {s.value}
+                  </p>
+                  <p className="eyebrow mt-0.5">{s.label}</p>
+                </CardContent>
               </Card>
             ))}
           </div>
@@ -58,11 +59,11 @@ export default async function StudentDashboard() {
           <ul className="space-y-3">
             {bookings.map((b) => (
               <li key={b.id}>
-                <Card className="overflow-hidden">
-                  <div className="flex flex-col gap-4 p-4 sm:flex-row">
+                <Card className="gap-0 overflow-hidden py-0">
+                  <CardContent className="flex flex-col gap-4 p-4 sm:flex-row">
                     <Link
                       href={`/boardings/${b.boarding_id}`}
-                      className="relative h-28 shrink-0 overflow-hidden rounded-[10px] bg-crust sm:h-24 sm:w-36"
+                      className="relative h-28 shrink-0 overflow-hidden rounded-lg bg-crust sm:h-24 sm:w-36"
                     >
                       {b.boarding_image ? (
                         <Image
@@ -80,7 +81,7 @@ export default async function StudentDashboard() {
                         <div className="min-w-0">
                           <Link
                             href={`/boardings/${b.boarding_id}`}
-                            className="font-display font-semibold leading-snug text-ink transition-colors hover:text-lagoon"
+                            className="font-display leading-snug font-bold tracking-tighter text-ink transition-colors hover:text-lagoon"
                           >
                             {b.boarding_title}
                           </Link>
@@ -107,14 +108,14 @@ export default async function StudentDashboard() {
                       </dl>
 
                       {b.message ? (
-                        <p className="mt-3 border-l-2 border-crust pl-3 text-[0.8125rem] italic leading-relaxed text-ink-soft">
+                        <p className="mt-3 border-l-2 border-crust pl-3 text-[0.8125rem] leading-relaxed italic text-ink-soft">
                           {b.message}
                         </p>
                       ) : null}
                     </div>
-                  </div>
+                  </CardContent>
 
-                  <div className="flex items-center justify-between gap-3 border-t border-crust bg-salt px-4 py-2.5">
+                  <CardFooter className="justify-between gap-3 border-t bg-salt px-4 py-2.5">
                     <p className="text-[0.8125rem] text-ink-soft">
                       {b.status === "pending"
                         ? "The owner has not answered yet."
@@ -125,15 +126,17 @@ export default async function StudentDashboard() {
                     {b.status === "pending" ? (
                       <form action={withdrawRequest}>
                         <input type="hidden" name="booking_id" value={b.id} />
-                        <button
+                        <Button
                           type="submit"
-                          className="text-[0.8125rem] text-ink-soft underline underline-offset-4 transition-colors hover:text-laterite"
+                          variant="link"
+                          size="sm"
+                          className="h-auto p-0 text-[0.8125rem] text-ink-soft hover:text-laterite"
                         >
                           Withdraw
-                        </button>
+                        </Button>
                       </form>
                     ) : null}
-                  </div>
+                  </CardFooter>
                 </Card>
               </li>
             ))}

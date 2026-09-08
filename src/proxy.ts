@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 /**
  * Refreshes the Supabase session on every request and writes the rotated
  * tokens back, which Server Components cannot do themselves. It also bounces
- * signed-out visitors away from /dashboard before the page renders — the real
+ * signed-out visitors away from /dashboard before the page renders - the real
  * role check still happens in the dashboard layout and in row level security.
  */
 export async function proxy(request: NextRequest) {

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ListingForm } from "@/components/listing-form";
-import { ListingStatusBadge, SectionHeading } from "@/components/ui";
+import { SectionHeading } from "@/components/section-heading";
+import { ListingStatusBadge } from "@/components/status-badge";
 import { getBoarding } from "@/lib/data";
 import { requireRole } from "@/lib/session";
 

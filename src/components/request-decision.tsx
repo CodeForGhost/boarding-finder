@@ -2,9 +2,9 @@
 
 import { useActionState } from "react";
 import { decideRequest } from "@/actions/bookings";
-import { Button } from "./ui";
+import { Button } from "@/components/ui/button";
 
-/** Confirm / decline for one request, with the reason shown if it is refused. */
+/** Confirm or decline one request, with the reason shown if it is refused. */
 export function RequestDecision({ bookingId }: { bookingId: string }) {
   const [state, action, pending] = useActionState(decideRequest, null);
 
@@ -16,14 +16,14 @@ export function RequestDecision({ bookingId }: { bookingId: string }) {
           type="submit"
           name="decision"
           value="rejected"
-          variant="outline"
+          variant="destructive-soft"
           size="sm"
           disabled={pending}
         >
           Decline
         </Button>
         <Button type="submit" name="decision" value="confirmed" size="sm" disabled={pending}>
-          {pending ? "Saving…" : "Confirm room"}
+          {pending ? "Saving..." : "Confirm room"}
         </Button>
       </div>
       {state?.error ? (

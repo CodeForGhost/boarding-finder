@@ -1,4 +1,4 @@
--- Puttalam Boarding Finder — demo seed data
+-- BoardingPx - demo seed data
 -- Run supabase/schema.sql first, then create the demo accounts (see README),
 -- then run this. Rows are matched to accounts by email, so the auth users must
 -- exist before this runs.
@@ -73,7 +73,7 @@ begin
      total_rooms, available_rooms, amenities, images, status, created_at)
   values
     ('00000000-0000-4000-8000-000000000001', u_vendor, 'Annexe near Puttalam bus stand', 'Two rooms on the upper floor with a separate entrance from Kurunegala Road. Five minutes on foot to the main bus stand, so you can be in Kalladi or Palaviya without waiting for a connection. Tube well water and a 24-hour tank, so the dry-season cuts do not reach the tap.', 'Puttalam Town',
-     '142/3 Kurunegala Road, Puttalam', 'mixed', 6500, 4, 2,
+     '142/3 Kurunegala Road, Puttalam', 'male', 6500, 4, 2,
      array['Wi-Fi', 'Attached bathroom', 'Study table', 'Water included', 'Parking', 'CCTV']::text[], array['https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '34 days'),
     ('00000000-0000-4000-8000-000000000002', u_vendor, 'Women''s boarding at Kalladi Junction', 'Ground-floor rooms in a family home, women only. The owner''s family lives in the front section and the gate is locked at 9.30pm. Rice and curry twice a day is included; tell the owner a day ahead if you will miss a meal.', 'Kalladi',
      '27 Beach Road, Kalladi', 'female', 7200, 6, 1,
@@ -88,7 +88,7 @@ begin
      'Nelum Mawatha, Sirambiadiya', 'female', 5500, 2, 2,
      array['Meals provided', 'Wi-Fi', 'Study table', 'Water included', 'Electricity included']::text[], array['https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '20 days'),
     ('00000000-0000-4000-8000-000000000006', u_vendor4, 'Shared boarding for four, Nawagaththegama', 'Two rooms sleeping two each, plus a common area with a table big enough to work at. Well water in the garden and a washing machine you can use twice a week. Bicycle parking under the porch.', 'Nawagaththegama',
-     'Wewa Road, Nawagaththegama', 'mixed', 4200, 4, 4,
+     'Wewa Road, Nawagaththegama', 'female', 4200, 4, 4,
      array['Kitchen access', 'Washing machine', 'Parking', 'Water included', 'Study table']::text[], array['https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '47 days'),
     ('00000000-0000-4000-8000-000000000007', u_vendor, 'Single room with attached bath, Puttalam Town', 'One room, one student, own bathroom, own key. The house is on a quiet lane two turns off Kandy Road. Electricity is metered separately and billed at the end of the month.', 'Puttalam Town',
      '5/1 Sanasa Lane, Puttalam', 'male', 6000, 3, 1,
@@ -97,13 +97,13 @@ begin
      '12 Lagoon View Road, Kalladi', 'female', 6800, 6, 2,
      array['Wi-Fi', 'Study table', 'Kitchen access', 'CCTV', 'Backup power', 'Electricity included']::text[], array['https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1505873242700-f289a29e1e0f?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '29 days'),
     ('00000000-0000-4000-8000-000000000009', u_vendor4, 'Two-room annexe with kitchen, Anamaduwa', 'Self-contained annexe with its own kitchen, good for two or three students who want to cook. Gas cooker and fridge are provided. The bus to Puttalam passes the top of the lane every twenty minutes.', 'Anamaduwa',
-     'Hospital Road, Anamaduwa', 'mixed', 5000, 2, 1,
+     'Hospital Road, Anamaduwa', 'male', 5000, 2, 1,
      array['Kitchen access', 'Attached bathroom', 'Parking', 'Water included', 'Study table']::text[], array['https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '51 days'),
     ('00000000-0000-4000-8000-000000000010', u_vendor2, 'Rooms above the shop, Mundal', 'Three rooms above a grocery on the Mundal main road. Noisy until the shop closes at 8pm, quiet after that, and the price reflects it. The lagoon is a ten-minute walk if you want somewhere to sit in the evening.', 'Mundal',
      'Main Street, Mundal', 'male', 3800, 3, 3,
      array['Water included', 'Parking', 'Kitchen access']::text[], array['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '15 days'),
     ('00000000-0000-4000-8000-000000000011', u_vendor, 'A/C room for two, Puttalam Town', 'The most comfortable room on this list and priced that way. Air conditioning, hot water, a proper desk each, and fibre internet that holds up for online classes. Suits two students splitting the rent.', 'Puttalam Town',
-     '31 Anuradhapura Road, Puttalam', 'mixed', 8500, 2, 1,
+     '31 Anuradhapura Road, Puttalam', 'female', 8500, 2, 1,
      array['A/C', 'Wi-Fi', 'Attached bathroom', 'Study table', 'Backup power', 'Washing machine', 'CCTV', 'Parking']::text[], array['https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '8 days'),
     ('00000000-0000-4000-8000-000000000012', u_vendor3, 'Women''s boarding with meals, Palaviya', 'Four rooms, two students each, three meals a day cooked in the house. The owner has run this boarding for eleven years and most students come through older sisters who stayed here before.', 'Palaviya',
      'Church Road, Palaviya', 'female', 7500, 4, 2,
@@ -112,10 +112,10 @@ begin
      'Sea Street, Thillayadi', 'male', 3600, 4, 2,
      array['Water included', 'Parking']::text[], array['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '44 days'),
     ('00000000-0000-4000-8000-000000000014', u_vendor2, 'Annexe near Kalladi beach', 'One-bedroom annexe with a small veranda facing the coconut garden. Five minutes to the beach road. Best for a final-year student who wants to be left alone.', 'Kalladi',
-     'Coconut Garden Lane, Kalladi', 'mixed', 6200, 1, 0,
+     'Coconut Garden Lane, Kalladi', 'male', 6200, 1, 0,
      array['Attached bathroom', 'Kitchen access', 'Wi-Fi', 'Parking', 'Water included']::text[], array['https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1400&q=70']::text[], 'approved', now() - interval '26 days'),
     ('00000000-0000-4000-8000-000000000015', u_vendor3, 'New boarding house, Sirambiadiya', 'Six rooms just finished, taking bookings for the new term. Attached bathrooms, tiled floors, and a covered park for motorbikes. Photos are from the final week of construction.', 'Sirambiadiya',
-     'School Lane, Sirambiadiya', 'mixed', 5800, 6, 6,
+     'School Lane, Sirambiadiya', 'female', 5800, 6, 6,
      array['Attached bathroom', 'Wi-Fi', 'Study table', 'Parking', 'Backup power']::text[], array['https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=1400&q=70', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=70']::text[], 'pending', now() - interval '2 days'),
     ('00000000-0000-4000-8000-000000000016', u_vendor4, 'Room to let, Nawagaththegama', 'Single room in a house near the tank. Quiet, cheap, and a long way from everything, which is the trade-off.', 'Nawagaththegama',
      'Tank Road, Nawagaththegama', 'female', 4000, 2, 2,

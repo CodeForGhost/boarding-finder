@@ -2,15 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { approveListing, rejectListing } from "@/actions/admin";
-import {
-  Badge,
-  Button,
-  Card,
-  EmptyState,
-  ListingStatusBadge,
-  RoomTally,
-  SectionHeading,
-} from "@/components/ui";
+import { EmptyState } from "@/components/empty-state";
+import { RoomTally } from "@/components/room-tally";
+import { SectionHeading } from "@/components/section-heading";
+import { ListingStatusBadge, ToneBadge } from "@/components/status-badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { getAdminStats, getAreaBreakdown, getBoardingsByStatus } from "@/lib/data";
 import { plural, rupees, timeAgo } from "@/lib/format";
 import { requireRole } from "@/lib/session";
@@ -24,17 +22,23 @@ export default async function AdminDashboard() {
   const stats = await getAdminStats();
   const queue = await getBoardingsByStatus("pending");
   const rejected = await getBoardingsByStatus("rejected");
-  const areas = (await getAreaBreakdown())
-    .slice()
-    .sort((a, b) => b.rooms - a.rooms);
+  const areas = (await getAreaBreakdown()).slice().sort((a, b) => b.rooms - a.rooms);
   // The bar measures rooms free, which is what a student can actually take.
   const mostRooms = Math.max(1, areas[0]?.rooms ?? 1);
 
   const cards = [
     { label: "Students", value: stats.students, note: "registered" },
     { label: "Boarding owners", value: stats.vendors, note: "registered" },
-    { label: "Live listings", value: stats.listings, note: `${stats.rooms_available} rooms free` },
-    { label: "Booking requests", value: stats.bookings, note: `${stats.pending_bookings} waiting` },
+    {
+      label: "Live listings",
+      value: stats.listings,
+      note: `${stats.rooms_available} rooms free`,
+    },
+    {
+      label: "Booking requests",
+      value: stats.bookings,
+      note: `${stats.pending_bookings} waiting`,
+    },
   ];
 
   return (
@@ -43,12 +47,14 @@ export default async function AdminDashboard() {
         <SectionHeading eyebrow="Administrator" title="Platform overview" />
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {cards.map((c) => (
-            <Card key={c.label} className="p-4">
-              <p className="font-mono text-3xl font-medium leading-none tracking-tight text-lagoon-deep">
-                {c.value}
-              </p>
-              <p className="mt-2 text-sm font-medium text-ink">{c.label}</p>
-              <p className="eyebrow mt-0.5">{c.note}</p>
+            <Card key={c.label} className="gap-0 py-4">
+              <CardContent className="px-4">
+                <p className="font-mono text-3xl leading-none font-medium tracking-tighter text-lagoon-deep">
+                  {c.value}
+                </p>
+                <p className="mt-2 text-sm font-medium text-ink">{c.label}</p>
+                <p className="eyebrow mt-0.5">{c.note}</p>
+              </CardContent>
             </Card>
           ))}
         </div>
@@ -69,21 +75,27 @@ export default async function AdminDashboard() {
           <ul className="space-y-3">
             {queue.map((b) => (
               <li key={b.id}>
-                <Card className="overflow-hidden">
-                  <div className="flex flex-col gap-4 p-4 sm:flex-row">
+                <Card className="gap-0 overflow-hidden py-4">
+                  <CardContent className="flex flex-col gap-4 px-4 sm:flex-row">
                     <Link
                       href={`/boardings/${b.id}`}
-                      className="relative h-32 shrink-0 overflow-hidden rounded-[10px] bg-crust sm:h-28 sm:w-40"
+                      className="relative h-32 shrink-0 overflow-hidden rounded-lg bg-crust sm:h-28 sm:w-40"
                     >
                       {b.images[0] ? (
-                        <Image src={b.images[0]} alt="" fill sizes="160px" className="object-cover" />
+                        <Image
+                          src={b.images[0]}
+                          alt=""
+                          fill
+                          sizes="160px"
+                          className="object-cover"
+                        />
                       ) : null}
                     </Link>
 
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/boardings/${b.id}`}
-                        className="font-display font-semibold leading-snug text-ink transition-colors hover:text-lagoon"
+                        className="font-display leading-snug font-bold tracking-tighter text-ink transition-colors hover:text-lagoon"
                       >
                         {b.title}
                       </Link>
@@ -113,12 +125,17 @@ export default async function AdminDashboard() {
                       </form>
                       <form action={rejectListing}>
                         <input type="hidden" name="id" value={b.id} />
-                        <Button type="submit" variant="danger" size="sm" className="w-full">
+                        <Button
+                          type="submit"
+                          variant="destructive-soft"
+                          size="sm"
+                          className="w-full"
+                        >
                           Reject
                         </Button>
                       </form>
                     </div>
-                  </div>
+                  </CardContent>
                 </Card>
               </li>
             ))}
@@ -134,16 +151,14 @@ export default async function AdminDashboard() {
       {/* Where the rooms are */}
       <section>
         <SectionHeading eyebrow="Coverage" title="Where the rooms are" />
-        <Card className="divide-y divide-crust">
+        <Card className="gap-0 divide-y divide-crust py-0">
           {areas.map((a) => (
             <div key={a.area} className="flex items-center gap-4 px-4 py-3">
               <span className="w-40 shrink-0 truncate text-sm text-ink">{a.area}</span>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-salt">
-                <div
-                  className="h-full rounded-full bg-lagoon"
-                  style={{ width: `${Math.round((a.rooms / mostRooms) * 100)}%` }}
-                />
-              </div>
+              <Progress
+                value={Math.round((a.rooms / mostRooms) * 100)}
+                className="h-2 flex-1 bg-salt"
+              />
               <span className="w-36 shrink-0 text-right font-mono text-[0.75rem] text-ink-soft">
                 {plural(a.rooms, "room")} · {a.listings} listed
               </span>
@@ -160,10 +175,10 @@ export default async function AdminDashboard() {
         </p>
       </section>
 
-      {rejected.length ? (
-        <section>
-          <SectionHeading eyebrow="History" title="Rejected listings" />
-          <Card className="divide-y divide-crust">
+      <section>
+        <SectionHeading eyebrow="History" title="Rejected listings" />
+        {rejected.length ? (
+          <Card className="gap-0 divide-y divide-crust py-0">
             {rejected.map((b) => (
               <div
                 key={b.id}
@@ -187,19 +202,18 @@ export default async function AdminDashboard() {
               </div>
             ))}
           </Card>
-        </section>
-      ) : (
-        <section>
-          <SectionHeading eyebrow="History" title="Rejected listings" />
-          <Card className="px-4 py-6">
-            <Badge tone="good">None</Badge>
-            <p className="mt-2 text-sm text-ink-soft">
-              Nothing has been rejected. Rejected listings show up here so an
-              owner can be given a second look.
-            </p>
+        ) : (
+          <Card className="gap-0 py-6">
+            <CardContent className="px-4">
+              <ToneBadge tone="good">None</ToneBadge>
+              <p className="mt-2 text-sm text-ink-soft">
+                Nothing has been rejected. Rejected listings show up here so an
+                owner can be given a second look.
+              </p>
+            </CardContent>
           </Card>
-        </section>
-      )}
+        )}
+      </section>
     </div>
   );
 }

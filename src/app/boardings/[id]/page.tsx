@@ -2,9 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BookingForm } from "@/components/booking-form";
+import { ButtonLink } from "@/components/button-link";
 import { Gallery } from "@/components/gallery";
+import { RoomTally } from "@/components/room-tally";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
-import { Badge, ButtonLink, Card, RoomTally } from "@/components/ui";
+import { ToneBadge } from "@/components/status-badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { getBoarding, hasOpenRequest, searchBoardings } from "@/lib/data";
 import { rupees, timeAgo } from "@/lib/format";
 import { getUser } from "@/lib/session";
@@ -53,13 +58,25 @@ export default async function BoardingPage({
     user?.role === "student" && (await hasOpenRequest(boarding.id, user.id));
 
   const reason = !user
-    ? { text: "Sign in as a student to send the owner a request.", href: `/login?next=/boardings/${boarding.id}`, cta: "Sign in" }
+    ? {
+        text: "Sign in as a student to send the owner a request.",
+        href: `/login?next=/boardings/${boarding.id}`,
+        cta: "Sign in",
+      }
     : user.role !== "student"
-      ? { text: "Requests come from student accounts. This one is signed in as a " + user.role + "." }
+      ? {
+          text: `Requests come from student accounts. This one is signed in as a ${user.role}.`,
+        }
       : alreadyAsked
-        ? { text: "You already have a request waiting on this boarding.", href: "/dashboard/student", cta: "See my requests" }
+        ? {
+            text: "You already have a request waiting on this boarding.",
+            href: "/dashboard/student",
+            cta: "See my requests",
+          }
         : full
-          ? { text: "Every room here is taken. The owner will update the count when one frees up." }
+          ? {
+              text: "Every room here is taken. The owner will update the count when one frees up.",
+            }
           : undefined;
 
   return (
@@ -81,11 +98,13 @@ export default async function BoardingPage({
         </nav>
 
         {boarding.status !== "approved" ? (
-          <div className="mb-6 rounded-[10px] border border-sun/40 bg-sun-wash px-4 py-3 text-sm text-[#8a5b0c]">
-            {boarding.status === "pending"
-              ? "This listing is still waiting for admin approval. Only you and the admin can see it."
-              : "This listing was rejected. Edit it to send it back for review."}
-          </div>
+          <Alert className="mb-6 border-sun/40 bg-sun-wash">
+            <AlertDescription className="text-sun-ink">
+              {boarding.status === "pending"
+                ? "This listing is still waiting for admin approval. Only you and the admin can see it."
+                : "This listing was rejected. Edit it to send it back for review."}
+            </AlertDescription>
+          </Alert>
         ) : null}
 
         <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
@@ -94,19 +113,17 @@ export default async function BoardingPage({
 
             <div className="mt-8">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge tone="neutral">{boarding.area}</Badge>
-                <Badge tone={boarding.gender === "mixed" ? "neutral" : "good"}>
-                  {genderLabel(boarding.gender)}
-                </Badge>
-                {full ? <Badge tone="bad">Full</Badge> : null}
+                <ToneBadge>{boarding.area}</ToneBadge>
+                <ToneBadge tone="good">{genderLabel(boarding.gender)}</ToneBadge>
+                {full ? <ToneBadge tone="bad">Full</ToneBadge> : null}
               </div>
 
-              <h1 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-ink sm:text-[2.25rem]">
+              <h1 className="mt-3 font-display text-3xl leading-tight font-extrabold tracking-tighter text-ink sm:text-[2.25rem]">
                 {boarding.title}
               </h1>
               <p className="mt-2 text-sm text-ink-soft">{boarding.address}</p>
 
-              <p className="mt-6 whitespace-pre-line text-[0.9375rem] leading-relaxed text-ink-soft">
+              <p className="mt-6 text-[0.9375rem] leading-relaxed whitespace-pre-line text-ink-soft">
                 {boarding.description}
               </p>
 
@@ -137,48 +154,56 @@ export default async function BoardingPage({
 
           {/* Booking rail */}
           <aside className="lg:sticky lg:top-24 lg:h-fit">
-            <Card className="p-5">
-              <div className="flex items-end justify-between gap-3 border-b border-crust pb-4">
-                <div>
-                  <p className="font-mono text-[1.75rem] font-medium leading-none tracking-tight text-ink">
-                    {rupees(boarding.price_per_month)}
-                  </p>
-                  <p className="eyebrow mt-1.5">per month</p>
+            <Card className="gap-0 py-5">
+              <CardContent className="px-5">
+                <div className="flex items-end justify-between gap-3 pb-4">
+                  <div>
+                    <p className="font-mono text-[1.75rem] leading-none font-medium tracking-tighter text-ink">
+                      {rupees(boarding.price_per_month)}
+                    </p>
+                    <p className="eyebrow mt-1.5">per month</p>
+                  </div>
+                  <RoomTally
+                    total={boarding.total_rooms}
+                    available={boarding.available_rooms}
+                    label={false}
+                  />
                 </div>
-                <RoomTally
-                  total={boarding.total_rooms}
-                  available={boarding.available_rooms}
-                  label={false}
+
+                <Separator />
+
+                <p className="py-4 text-sm text-ink-soft">
+                  {full
+                    ? "No rooms free right now."
+                    : `${boarding.available_rooms} of ${boarding.total_rooms} rooms still free.`}
+                </p>
+
+                <BookingForm
+                  boardingId={boarding.id}
+                  minDate={tomorrow()}
+                  canRequest={!reason}
+                  reason={reason}
                 />
-              </div>
-
-              <p className="py-4 text-sm text-ink-soft">
-                {full
-                  ? "No rooms free right now."
-                  : `${boarding.available_rooms} of ${boarding.total_rooms} rooms still free.`}
-              </p>
-
-              <BookingForm
-                boardingId={boarding.id}
-                minDate={tomorrow()}
-                canRequest={!reason}
-                reason={reason}
-              />
+              </CardContent>
             </Card>
 
-            <Card className="mt-4 p-5">
-              <h2 className="eyebrow mb-3">Owner</h2>
-              <p className="font-display font-semibold text-ink">{boarding.vendor_name}</p>
-              <dl className="mt-2 space-y-1 font-mono text-[0.8125rem] text-ink-soft">
-                <div className="flex gap-2">
-                  <dt className="text-ink-faint">Phone</dt>
-                  <dd>{boarding.vendor_phone}</dd>
-                </div>
-                <div className="flex gap-2">
-                  <dt className="text-ink-faint">Email</dt>
-                  <dd className="break-all">{boarding.vendor_email}</dd>
-                </div>
-              </dl>
+            <Card className="mt-4 gap-0 py-5">
+              <CardContent className="px-5">
+                <h2 className="eyebrow mb-3">Owner</h2>
+                <p className="font-display font-bold tracking-tighter text-ink">
+                  {boarding.vendor_name}
+                </p>
+                <dl className="mt-2 space-y-1 font-mono text-[0.8125rem] text-ink-soft">
+                  <div className="flex gap-2">
+                    <dt className="text-ink-faint">Phone</dt>
+                    <dd>{boarding.vendor_phone}</dd>
+                  </div>
+                  <div className="flex gap-2">
+                    <dt className="text-ink-faint">Email</dt>
+                    <dd className="break-all">{boarding.vendor_email}</dd>
+                  </div>
+                </dl>
+              </CardContent>
             </Card>
           </aside>
         </div>
@@ -186,7 +211,7 @@ export default async function BoardingPage({
         {nearby.length ? (
           <section className="mt-16 border-t border-crust pt-10">
             <div className="mb-5 flex items-end justify-between gap-3">
-              <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
+              <h2 className="font-display text-xl font-bold tracking-tighter text-ink">
                 Also in {boarding.area}
               </h2>
               <ButtonLink
@@ -204,7 +229,7 @@ export default async function BoardingPage({
                   href={`/boardings/${b.id}`}
                   className="rounded-card border border-crust bg-surface p-4 transition-colors hover:border-lagoon"
                 >
-                  <p className="font-display font-semibold leading-snug text-ink">
+                  <p className="font-display leading-snug font-bold tracking-tighter text-ink">
                     {b.title}
                   </p>
                   <p className="mt-2 font-mono text-sm text-lagoon-deep">

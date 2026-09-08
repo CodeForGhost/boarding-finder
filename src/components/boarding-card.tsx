@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import { RoomTally } from "@/components/room-tally";
 import { rupees } from "@/lib/format";
 import type { Boarding } from "@/lib/types";
 import { genderLabel } from "@/lib/types";
-import { RoomTally } from "./ui";
 
 export function BoardingCard({
   boarding,
@@ -31,22 +31,22 @@ export function BoardingCard({
             className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : null}
-        <span className="absolute left-3 top-3 rounded-full bg-surface/95 px-2.5 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-ink-soft backdrop-blur">
+        <span className="absolute top-3 left-3 rounded-full bg-surface/95 px-2.5 py-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-soft uppercase backdrop-blur">
           {boarding.area}
         </span>
         {full ? (
-          <span className="absolute right-3 top-3 rounded-full bg-laterite px-2.5 py-1 font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-white">
+          <span className="absolute top-3 right-3 rounded-full bg-laterite px-2.5 py-1 font-mono text-[0.6875rem] tracking-[0.08em] text-white uppercase">
             Full
           </span>
         ) : null}
-        <span className="absolute bottom-3 left-3 rounded-[8px] bg-ink/90 px-2.5 py-1.5 font-mono text-[0.8125rem] font-medium text-salt backdrop-blur">
+        <span className="absolute bottom-3 left-3 rounded-md bg-ink/90 px-2.5 py-1.5 font-mono text-[0.8125rem] font-medium text-salt backdrop-blur">
           {rupees(boarding.price_per_month)}
           <span className="text-ink-faint">/mo</span>
         </span>
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
-        <h3 className="font-display text-[1.0625rem] font-semibold leading-snug tracking-tight text-ink">
+        <h3 className="font-display text-[1.0625rem] leading-snug font-bold tracking-tighter text-ink">
           {boarding.title}
         </h3>
         <p className="line-clamp-2 text-[0.8125rem] leading-relaxed text-ink-soft">
@@ -54,7 +54,7 @@ export function BoardingCard({
         </p>
         <div className="mt-auto flex items-center justify-between gap-3 border-t border-crust pt-3">
           <RoomTally total={boarding.total_rooms} available={boarding.available_rooms} />
-          <span className="shrink-0 font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-ink-faint">
+          <span className="shrink-0 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
             {genderLabel(boarding.gender)}
           </span>
         </div>

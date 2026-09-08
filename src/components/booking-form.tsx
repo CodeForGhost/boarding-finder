@@ -3,7 +3,19 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { requestBooking } from "@/actions/bookings";
-import { Button } from "./ui";
+import { FormError } from "@/components/form-message";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 const DURATIONS = [3, 6, 9, 12, 24];
 
@@ -23,35 +35,41 @@ export function BookingForm({
 
   if (!canRequest && reason) {
     return (
-      <div className="rounded-[10px] border border-crust bg-salt p-4 text-sm text-ink-soft">
-        <p>{reason.text}</p>
-        {reason.href && reason.cta ? (
-          <Link
-            href={reason.href}
-            className="mt-2 inline-block font-medium text-lagoon underline underline-offset-4"
-          >
-            {reason.cta}
-          </Link>
-        ) : null}
-      </div>
+      <Alert className="border-crust bg-salt">
+        <AlertDescription className="text-ink-soft">
+          <p>{reason.text}</p>
+          {reason.href && reason.cta ? (
+            <Link
+              href={reason.href}
+              className="font-medium text-lagoon underline underline-offset-4"
+            >
+              {reason.cta}
+            </Link>
+          ) : null}
+        </AlertDescription>
+      </Alert>
     );
   }
 
   if (state?.ok) {
     return (
-      <div className="rounded-[10px] border border-lagoon/25 bg-lagoon-wash p-4">
-        <p className="font-display font-semibold text-lagoon-deep">Request sent</p>
-        <p className="mt-1 text-sm text-ink-soft">
-          The owner sees it on their dashboard. You will see the answer under
-          your requests.
-        </p>
-        <Link
-          href="/dashboard/student"
-          className="mt-3 inline-block text-sm font-medium text-lagoon underline underline-offset-4"
-        >
-          Go to my requests
-        </Link>
-      </div>
+      <Alert className="border-lagoon/25 bg-lagoon-wash">
+        <AlertDescription className="text-ink-soft">
+          <p className="font-display font-bold tracking-tighter text-lagoon-deep">
+            Request sent
+          </p>
+          <p>
+            The owner sees it on their dashboard. You will see the answer under
+            your requests.
+          </p>
+          <Link
+            href="/dashboard/student"
+            className="mt-1 text-sm font-medium text-lagoon underline underline-offset-4"
+          >
+            Go to my requests
+          </Link>
+        </AlertDescription>
+      </Alert>
     );
   }
 
@@ -60,48 +78,57 @@ export function BookingForm({
       <input type="hidden" name="boarding_id" value={boardingId} />
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block">
-          <span className="eyebrow mb-1.5 block">Move in</span>
-          <input
+        <div className="space-y-1.5">
+          <Label htmlFor="move-in" className="eyebrow">
+            Move in
+          </Label>
+          <Input
+            id="move-in"
             type="date"
             name="move_in_date"
             required
             min={minDate}
             defaultValue={minDate}
-            className="field font-mono text-[0.8125rem]"
+            className="bg-surface font-mono text-[0.8125rem]"
           />
-        </label>
-        <label className="block">
-          <span className="eyebrow mb-1.5 block">For how long</span>
-          <select name="duration_months" className="field" defaultValue={6}>
-            {DURATIONS.map((d) => (
-              <option key={d} value={d}>
-                {d} months
-              </option>
-            ))}
-          </select>
-        </label>
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="duration" className="eyebrow">
+            For how long
+          </Label>
+          <Select name="duration_months" defaultValue="6">
+            <SelectTrigger id="duration" className="w-full bg-surface">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {DURATIONS.map((d) => (
+                <SelectItem key={d} value={String(d)}>
+                  {d} months
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      <label className="block">
-        <span className="eyebrow mb-1.5 block">Message to the owner</span>
-        <textarea
+      <div className="space-y-1.5">
+        <Label htmlFor="message" className="eyebrow">
+          Message to the owner
+        </Label>
+        <Textarea
+          id="message"
           name="message"
           rows={3}
           maxLength={500}
           placeholder="Tell the owner what you study and when you can come to see the room."
-          className="field resize-y"
+          className="resize-y bg-surface"
         />
-      </label>
+      </div>
 
-      {state?.error ? (
-        <p className="rounded-[8px] border border-laterite/25 bg-laterite-wash px-3 py-2 text-sm text-laterite">
-          {state.error}
-        </p>
-      ) : null}
+      <FormError>{state?.error}</FormError>
 
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
-        {pending ? "Sending…" : "Request this room"}
+        {pending ? "Sending..." : "Request this room"}
       </Button>
       <p className="text-center text-xs text-ink-faint">
         No payment now. The owner replies with a yes or no.

@@ -1,5 +1,7 @@
 export type Role = "student" | "vendor" | "admin";
-export type Gender = "male" | "female" | "mixed";
+// Boardings in Puttalam take men or women, never both. There is no third
+// option to add later: a house that took both would be a different product.
+export type Gender = "male" | "female";
 export type ListingStatus = "pending" | "approved" | "rejected";
 export type BookingStatus = "pending" | "confirmed" | "rejected";
 
@@ -90,9 +92,24 @@ export const AMENITIES = [
 export const GENDERS: { value: Gender; label: string }[] = [
   { value: "female", label: "Women only" },
   { value: "male", label: "Men only" },
-  { value: "mixed", label: "Mixed" },
 ];
 
 export function genderLabel(g: Gender) {
   return GENDERS.find((x) => x.value === g)?.label ?? g;
+}
+
+/**
+ * The value an "any" option carries in a filter control.
+ *
+ * A Radix select item cannot hold an empty string, so "no preference" needs a
+ * word. `SearchForm` drops these before the browser builds the query string,
+ * and `searchValue` below catches the one that gets through when JavaScript
+ * has not loaded, so a shared URL never carries `?area=any`.
+ */
+export const ANY = "any";
+
+export function searchValue(v: string | string[] | undefined): string | undefined {
+  const s = Array.isArray(v) ? v[0] : v;
+  const trimmed = s?.trim();
+  return trimmed && trimmed !== ANY ? trimmed : undefined;
 }

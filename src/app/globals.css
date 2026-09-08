@@ -1,62 +1,141 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 /*
-  Palette taken from the Puttalam salterns: the chalk-white crust of the salt
-  pans, the shallow green water standing in them, and the red laterite the
+  BoardingPx.
+
+  The palette is taken from the Puttalam salterns: the chalk-white crust of the
+  salt pans, the shallow green water standing in them, and the red laterite the
   roads are cut through.
+
+  The app is light only on purpose, so the dark variant is redefined to a class
+  that is never set. Without this line Tailwind would point `dark:` at the
+  reader's OS setting and half-apply a theme nobody designed.
 */
-@theme {
-  --color-salt: #f6f7f3;
-  --color-surface: #ffffff;
-  --color-crust: #e3e8de;
-  --color-crust-strong: #cdd5c7;
-
-  --color-ink: #0d1f1b;
-  --color-ink-soft: #4a615c;
-  --color-ink-faint: #7d918c;
-
-  --color-lagoon: #0b6e62;
-  --color-lagoon-deep: #07463e;
-  --color-lagoon-wash: #e6f0ec;
-
-  --color-laterite: #b24a2e;
-  --color-laterite-wash: #f8ece7;
-
-  --color-sun: #d8952a;
-  --color-sun-wash: #fbf1de;
-
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
-
-  --radius-card: 14px;
-}
+@custom-variant dark (&:is(.dark *));
 
 :root {
   color-scheme: light;
+
+  /* The saltern palette. */
+  --salt: #f6f7f3;
+  --surface: #ffffff;
+  --crust: #e3e8de;
+  --crust-strong: #cdd5c7;
+
+  --ink: #0d1f1b;
+  --ink-soft: #4a615c;
+  --ink-faint: #7d918c;
+
+  --lagoon: #0b6e62;
+  --lagoon-deep: #07463e;
+  --lagoon-wash: #e6f0ec;
+
+  --laterite: #b24a2e;
+  --laterite-wash: #f8ece7;
+
+  --sun: #d8952a;
+  --sun-wash: #fbf1de;
+  --sun-ink: #8a5b0c;
+
+  /* 10px, so the shadcn scale lands on the 14px card and 10px control the
+     design was already drawn to. */
+  --radius: 0.625rem;
+
+  /* shadcn tokens, mapped onto the palette above. */
+  --background: var(--salt);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--lagoon);
+  --primary-foreground: #ffffff;
+  --secondary: #e8ece4;
+  --secondary-foreground: var(--ink);
+  --muted: #edf0ea;
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--lagoon-wash);
+  --accent-foreground: var(--lagoon-deep);
+  --destructive: var(--laterite);
+  --border: var(--crust);
+  --input: var(--crust-strong);
+  --ring: var(--lagoon);
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
+@theme inline {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* The palette stays addressable by name, because "lagoon" and "laterite"
+     carry meaning here that "primary" and "destructive" do not. */
+  --color-salt: var(--salt);
+  --color-surface: var(--surface);
+  --color-crust: var(--crust);
+  --color-crust-strong: var(--crust-strong);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-lagoon: var(--lagoon);
+  --color-lagoon-deep: var(--lagoon-deep);
+  --color-lagoon-wash: var(--lagoon-wash);
+  --color-laterite: var(--laterite);
+  --color-laterite-wash: var(--laterite-wash);
+  --color-sun: var(--sun);
+  --color-sun-wash: var(--sun-wash);
+  --color-sun-ink: var(--sun-ink);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-card: calc(var(--radius) + 4px);
 }
 
-body {
-  background: var(--color-salt);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
 
-::selection {
-  background: var(--color-lagoon);
-  color: #fff;
-}
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--color-lagoon);
-  outline-offset: 2px;
-  border-radius: 3px;
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--lagoon);
+    color: #fff;
+  }
+
+  /* Manrope's figures are proportional by default, which makes a column of
+     rents and counts jump. Anything numeric is set in the mono face. */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 @layer components {
@@ -66,34 +145,7 @@ body {
     font-size: 0.6875rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-ink-faint);
-  }
-
-  .field {
-    width: 100%;
-    border: 1px solid var(--color-crust-strong);
-    background: var(--color-surface);
-    border-radius: 10px;
-    padding: 0.625rem 0.75rem;
-    font-size: 0.9375rem;
-    color: var(--color-ink);
-    transition: border-color 120ms ease, box-shadow 120ms ease;
-  }
-  .field::placeholder {
-    color: var(--color-ink-faint);
-  }
-  .field:focus {
-    outline: none;
-    border-color: var(--color-lagoon);
-    box-shadow: 0 0 0 3px var(--color-lagoon-wash);
-  }
-  select.field {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%234a615c' d='M1 1.8 6 6.6l5-4.8'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.7rem center;
-    background-size: 11px;
-    padding-right: 2rem;
+    color: var(--ink-faint);
   }
 }
 

@@ -1,15 +1,54 @@
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-/** Three salt pans seen from above; the filled one is a room still free. */
+/**
+ * A boarding read one pixel at a time: nine cells, the lit ones are rooms
+ * still free. It is the room tally at logo size, which is the whole product in
+ * one mark.
+ */
 export function LogoMark({ className = "h-7 w-7" }: { className?: string }) {
+  const lit = [0, 3, 4, 7];
   return (
     <svg viewBox="0 0 24 24" aria-hidden className={className}>
-      <rect x="1" y="1" width="22" height="22" rx="5" fill="var(--color-lagoon-deep)" />
-      <rect x="5" y="5.5" width="6" height="6" rx="1.2" fill="var(--color-salt)" opacity="0.55" />
-      <rect x="13" y="5.5" width="6" height="6" rx="1.2" fill="var(--color-salt)" opacity="0.3" />
-      <rect x="5" y="13" width="6" height="6" rx="1.2" fill="var(--color-salt)" opacity="0.3" />
-      <rect x="13" y="13" width="6" height="6" rx="1.2" fill="var(--color-sun)" />
+      <rect x="1" y="1" width="22" height="22" rx="5" fill="var(--lagoon-deep)" />
+      {Array.from({ length: 9 }, (_, i) => (
+        <rect
+          key={i}
+          x={5 + (i % 3) * 5}
+          y={5 + Math.floor(i / 3) * 5}
+          width="4"
+          height="4"
+          rx="1"
+          fill={lit.includes(i) ? "var(--sun)" : "var(--salt)"}
+          opacity={lit.includes(i) ? 1 : 0.28}
+        />
+      ))}
     </svg>
+  );
+}
+
+/**
+ * The wordmark. `tone="dark"` is for the ink panels, where the mark is dropped
+ * and the type carries it alone.
+ */
+export function Wordmark({
+  tone = "light",
+  className,
+}: {
+  tone?: "light" | "dark";
+  className?: string;
+}) {
+  return (
+    <span
+      className={cn(
+        "font-display text-[1.0625rem] leading-none font-extrabold tracking-tighter",
+        tone === "dark" ? "text-salt" : "text-ink",
+        className,
+      )}
+    >
+      Boarding
+      <span className={tone === "dark" ? "text-sun" : "text-lagoon"}>Px</span>
+    </span>
   );
 }
 
@@ -17,9 +56,7 @@ export function Logo({ href = "/" }: { href?: string }) {
   return (
     <Link href={href} className="flex items-center gap-2.5">
       <LogoMark />
-      <span className="font-display text-[1.0625rem] font-bold leading-none tracking-tight text-ink">
-        Puttalam<span className="hidden font-normal text-ink-soft sm:inline"> Boarding</span>
-      </span>
+      <Wordmark />
     </Link>
   );
 }

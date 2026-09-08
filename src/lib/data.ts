@@ -77,10 +77,7 @@ export async function searchBoardings(params: SearchParams = {}): Promise<Boardi
   if (typeof params.min === "number" && Number.isFinite(params.min)) {
     query = query.gte("price_per_month", params.min);
   }
-  // A mixed boarding accepts anyone, so it always matches a gender filter.
-  if (params.gender) {
-    query = query.or(`gender.eq.${params.gender},gender.eq.mixed`);
-  }
+  if (params.gender) query = query.eq("gender", params.gender);
   if (params.q) {
     const t = quoted(params.q);
     query = query.or(
@@ -445,7 +442,7 @@ export async function getVendorBookings(
 
 /**
  * Confirming goes through confirm_booking() so the room comes off the board in
- * the same transaction — two clicks on the last room cannot both win. The
+ * the same transaction - two clicks on the last room cannot both win. The
  * function returns null on success or the message to show the owner.
  */
 export async function decideBooking(

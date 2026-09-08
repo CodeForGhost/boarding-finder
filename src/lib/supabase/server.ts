@@ -6,7 +6,7 @@ import { SUPABASE_ANON_KEY, SUPABASE_URL } from "./env";
 /**
  * A Supabase client bound to the caller's cookies, so every query runs as the
  * signed-in person and row level security applies. Server components cannot
- * write cookies, which is why the setAll below swallows that error — the token
+ * write cookies, which is why the setAll below swallows that error - the token
  * refresh that matters happens in proxy.ts on the way in.
  */
 export async function supabaseServer() {
