@@ -101,7 +101,7 @@ export default async function BoardingPage({
           <Alert className="mb-6 border-sun/40 bg-sun-wash">
             <AlertDescription className="text-sun-ink">
               {boarding.status === "pending"
-                ? "This listing is still waiting for admin approval. Only you and the admin can see it."
+                ? "This listing is still waiting for admin approval."
                 : "This listing was rejected. Edit it to send it back for review."}
             </AlertDescription>
           </Alert>
