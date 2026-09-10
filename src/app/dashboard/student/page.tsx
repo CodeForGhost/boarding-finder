@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { withdrawRequest } from "@/actions/bookings";
 import { ButtonLink } from "@/components/button-link";
+import { SubmitButton } from "@/components/pending";
 import { EmptyState } from "@/components/empty-state";
 import { SectionHeading } from "@/components/section-heading";
 import { BookingStatusBadge } from "@/components/status-badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { getStudentBookings } from "@/lib/data";
 import { months, rupees, shortDate, timeAgo } from "@/lib/format";
@@ -126,14 +126,14 @@ export default async function StudentDashboard() {
                     {b.status === "pending" ? (
                       <form action={withdrawRequest}>
                         <input type="hidden" name="booking_id" value={b.id} />
-                        <Button
-                          type="submit"
+                        <SubmitButton
                           variant="link"
                           size="sm"
                           className="h-auto p-0 text-[0.8125rem] text-ink-soft hover:text-laterite"
+                          busyLabel="Withdrawing…"
                         >
                           Withdraw
-                        </Button>
+                        </SubmitButton>
                       </form>
                     ) : null}
                   </CardFooter>

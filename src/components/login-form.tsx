@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { signIn } from "@/actions/auth";
 import { FormError } from "@/components/form-message";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/pending";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,7 +18,7 @@ const DEMO = [
 const DEMO_PASSWORD = "demo1234";
 
 export function LoginForm({ next }: { next?: string }) {
-  const [state, action, pending] = useActionState(signIn, null);
+  const [state, action] = useActionState(signIn, null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -63,9 +63,9 @@ export function LoginForm({ next }: { next?: string }) {
 
         <FormError>{state?.error}</FormError>
 
-        <Button type="submit" size="lg" className="w-full" disabled={pending}>
-          {pending ? "Signing in..." : "Sign in"}
-        </Button>
+        <SubmitButton size="lg" className="w-full" busyLabel="Signing in…">
+          Sign in
+        </SubmitButton>
       </form>
 
       {/* Demo accounts: one tap fills the form so nobody types on stage. */}

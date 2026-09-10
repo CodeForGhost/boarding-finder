@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { signOut } from "@/actions/auth";
 import { ButtonLink } from "@/components/button-link";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/pending";
 import { getUser } from "@/lib/session";
 import { Logo, Wordmark } from "./logo";
 
@@ -44,9 +44,9 @@ export async function SiteHeader() {
                 </span>
               </ButtonLink>
               <form action={signOut}>
-                <Button type="submit" variant="ghost" size="sm">
+                <SubmitButton variant="ghost" size="sm" busyLabel="Signing out…">
                   Sign out
-                </Button>
+                </SubmitButton>
               </form>
             </>
           ) : (

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { createListing, updateListing } from "@/actions/listings";
 import { FormError } from "@/components/form-message";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/pending";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ import type { Boarding } from "@/lib/types";
 
 export function ListingForm({ boarding }: { boarding?: Boarding }) {
   const editing = Boolean(boarding);
-  const [state, action, pending] = useActionState(
+  const [state, action] = useActionState(
     editing ? updateListing : createListing,
     null,
   );
@@ -214,9 +214,9 @@ export function ListingForm({ boarding }: { boarding?: Boarding }) {
       <FormError>{state?.error}</FormError>
 
       <div className="flex items-center gap-3">
-        <Button type="submit" size="lg" disabled={pending}>
-          {pending ? "Saving..." : editing ? "Save changes" : "Add boarding"}
-        </Button>
+        <SubmitButton size="lg" busyLabel={editing ? "Saving…" : "Adding…"}>
+          {editing ? "Save changes" : "Add boarding"}
+        </SubmitButton>
         <Link
           href="/dashboard/vendor"
           className="text-sm text-ink-soft underline underline-offset-4 transition-colors hover:text-ink"

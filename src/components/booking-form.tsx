@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { requestBooking } from "@/actions/bookings";
 import { FormError } from "@/components/form-message";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/pending";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -31,7 +31,7 @@ export function BookingForm({
   /** Why the form is closed, when it is. */
   reason?: { text: string; href?: string; cta?: string };
 }) {
-  const [state, action, pending] = useActionState(requestBooking, null);
+  const [state, action] = useActionState(requestBooking, null);
 
   if (!canRequest && reason) {
     return (
@@ -127,9 +127,9 @@ export function BookingForm({
 
       <FormError>{state?.error}</FormError>
 
-      <Button type="submit" size="lg" className="w-full" disabled={pending}>
-        {pending ? "Sending..." : "Request this room"}
-      </Button>
+      <SubmitButton size="lg" className="w-full" busyLabel="Sending…">
+        Request this room
+      </SubmitButton>
       <p className="text-center text-xs text-ink-faint">
         No payment now. The owner replies with a yes or no.
       </p>

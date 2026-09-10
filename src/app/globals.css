@@ -173,4 +173,24 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
+  /*
+   * The spinner has to be exempt. The rule above is written for decoration;
+   * applied to a spinner it runs one 0.01ms rotation and leaves it stopped
+   * mid-turn, which reads as a frozen screen at the exact moment the app is
+   * asking for patience. Motion is the whole message here, so it keeps
+   * turning - slower, because a small steady rotation is not the thing
+   * reduce-motion is protecting anyone from.
+   */
+  [data-slot="spinner"] {
+    animation-duration: 1.6s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  /* Same for the skeleton pulse: frozen, it is indistinguishable from
+     an empty grey page that has finished loading. */
+  [data-slot="skeleton"] {
+    animation-duration: 2.4s !important;
+    animation-iteration-count: infinite !important;
+  }
 }

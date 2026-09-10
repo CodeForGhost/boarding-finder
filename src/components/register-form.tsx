@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { signUp } from "@/actions/auth";
 import { FormError } from "@/components/form-message";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/pending";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -23,7 +23,7 @@ const ROLE_CHOICES = [
 ] as const;
 
 export function RegisterForm({ initialRole }: { initialRole?: string }) {
-  const [state, action, pending] = useActionState(signUp, null);
+  const [state, action] = useActionState(signUp, null);
   const [role, setRole] = useState<string>(
     initialRole === "vendor" ? "vendor" : "student",
   );
@@ -123,9 +123,9 @@ export function RegisterForm({ initialRole }: { initialRole?: string }) {
 
       <FormError>{state?.error}</FormError>
 
-      <Button type="submit" size="lg" className="w-full" disabled={pending}>
-        {pending ? "Creating account..." : "Create account"}
-      </Button>
+      <SubmitButton size="lg" className="w-full" busyLabel="Creating account…">
+        Create account
+      </SubmitButton>
     </form>
   );
 }

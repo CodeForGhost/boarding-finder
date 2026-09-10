@@ -3,13 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { deleteListing } from "@/actions/listings";
 import { ButtonLink } from "@/components/button-link";
+import { SubmitButton } from "@/components/pending";
 import { EmptyState } from "@/components/empty-state";
 import { RequestDecision } from "@/components/request-decision";
 import { RoomTally } from "@/components/room-tally";
 import { SectionHeading } from "@/components/section-heading";
 import { BookingStatusBadge, ListingStatusBadge } from "@/components/status-badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Collapsible,
@@ -204,14 +204,14 @@ export default async function VendorDashboard({
                       </ButtonLink>
                       <form action={deleteListing}>
                         <input type="hidden" name="id" value={l.id} />
-                        <Button
-                          type="submit"
+                        <SubmitButton
                           variant="ghost"
                           size="sm"
                           className="text-ink-soft hover:bg-laterite-wash hover:text-laterite"
+                          busyLabel="Deleting…"
                         >
                           Delete
-                        </Button>
+                        </SubmitButton>
                       </form>
                     </div>
                   </CardContent>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { LinkSpinner } from "@/components/pending";
 import { RoomTally } from "@/components/room-tally";
 import { rupees } from "@/lib/format";
 import type { Boarding } from "@/lib/types";
@@ -54,8 +55,13 @@ export function BoardingCard({
         </p>
         <div className="mt-auto flex items-center justify-between gap-3 border-t border-crust pt-3">
           <RoomTally total={boarding.total_rooms} available={boarding.available_rooms} />
-          <span className="shrink-0 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
-            {genderLabel(boarding.gender)}
+          <span className="flex shrink-0 items-center gap-2">
+            {/* A tapped card is silent until the room page arrives; this fills
+                that gap on the phones most students browse on. */}
+            <LinkSpinner className="size-3.5 text-lagoon" />
+            <span className="font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
+              {genderLabel(boarding.gender)}
+            </span>
           </span>
         </div>
       </div>

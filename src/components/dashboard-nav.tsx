@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LinkSpinner } from "@/components/pending";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +33,12 @@ export function DashboardNav({ items }: { items: NavItem[] }) {
                 : "text-ink-soft hover:bg-lagoon-wash hover:text-lagoon-deep",
             )}
           >
-            {item.label}
+            <span className="flex items-center gap-2">
+              {item.label}
+              {/* Switching dashboard tabs re-runs the whole page's queries, so
+                  the tap needs an answer before the new panel arrives. */}
+              <LinkSpinner className="size-3.5" />
+            </span>
             {item.count ? (
               <Badge
                 variant="secondary"

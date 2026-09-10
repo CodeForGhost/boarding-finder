@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FilterSelect } from "@/components/filter-select";
-import { SearchForm } from "@/components/search-form";
+import { SearchForm, SubmitSpinner } from "@/components/search-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -114,6 +114,7 @@ export function Filters({ active }: { active: ActiveFilters }) {
 
       <div className="flex items-center gap-3">
         <Button type="submit" size="sm">
+          <SubmitSpinner />
           Apply filters
         </Button>
         {isFiltered ? (

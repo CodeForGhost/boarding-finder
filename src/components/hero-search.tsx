@@ -1,6 +1,6 @@
 import { SearchIcon } from "lucide-react";
 import { FilterSelect } from "@/components/filter-select";
-import { SearchForm } from "@/components/search-form";
+import { SearchForm, SubmitSpinner } from "@/components/search-form";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { AREAS, GENDERS } from "@/lib/types";
@@ -52,7 +52,9 @@ export function HeroSearch() {
 
         <div className="flex items-end p-2">
           <Button type="submit" size="lg" className="w-full sm:w-auto">
-            <SearchIcon />
+            {/* The magnifier steps aside once the search is on its way. */}
+            <SearchIcon className="group-data-submitting/search:hidden" />
+            <SubmitSpinner />
             Search rooms
           </Button>
         </div>

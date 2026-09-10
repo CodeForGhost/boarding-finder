@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { approveListing, rejectListing } from "@/actions/admin";
 import { EmptyState } from "@/components/empty-state";
+import { SubmitButton } from "@/components/pending";
 import { RoomTally } from "@/components/room-tally";
 import { SectionHeading } from "@/components/section-heading";
 import { ListingStatusBadge, ToneBadge } from "@/components/status-badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { getAdminStats, getAreaBreakdown, getBoardingsByStatus } from "@/lib/data";
@@ -117,22 +117,24 @@ export default async function AdminDashboard() {
                     </div>
 
                     <div className="flex shrink-0 flex-row gap-2 sm:flex-col sm:justify-center">
+                      {/* One form per decision, so each button carries its own
+                          pending state and the other stays untouched. */}
                       <form action={approveListing}>
                         <input type="hidden" name="id" value={b.id} />
-                        <Button type="submit" size="sm" className="w-full">
+                        <SubmitButton size="sm" className="w-full" busyLabel="Approving…">
                           Approve
-                        </Button>
+                        </SubmitButton>
                       </form>
                       <form action={rejectListing}>
                         <input type="hidden" name="id" value={b.id} />
-                        <Button
-                          type="submit"
+                        <SubmitButton
                           variant="destructive-soft"
                           size="sm"
                           className="w-full"
+                          busyLabel="Rejecting…"
                         >
                           Reject
-                        </Button>
+                        </SubmitButton>
                       </form>
                     </div>
                   </CardContent>
@@ -194,9 +196,9 @@ export default async function AdminDashboard() {
                   <ListingStatusBadge status="rejected" />
                   <form action={approveListing}>
                     <input type="hidden" name="id" value={b.id} />
-                    <Button type="submit" variant="outline" size="sm">
+                    <SubmitButton variant="outline" size="sm" busyLabel="Publishing…">
                       Put it live
-                    </Button>
+                    </SubmitButton>
                   </form>
                 </div>
               </div>
